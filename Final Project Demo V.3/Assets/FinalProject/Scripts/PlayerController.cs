@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
                 state = State.falling;
             }
         }
-        if(state == State.falling)
+        else if(state == State.falling)
         {
             if(coll.IsTouchingLayers(ground))
             {
