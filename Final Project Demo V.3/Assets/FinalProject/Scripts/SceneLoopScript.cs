@@ -6,9 +6,7 @@ public class SceneLoopScript : MonoBehaviour
 {
 
     private BoxCollider2D boxCollider;
-
     private Rigidbody2D rb;
-
     private float width;
 
     public float speed = -3f;

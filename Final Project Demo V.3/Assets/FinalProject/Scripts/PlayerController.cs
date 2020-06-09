@@ -43,13 +43,11 @@ public class PlayerController : MonoBehaviour
         if (hDirection < 0)
         {
             rb.velocity = new Vector2(-5, rb.velocity.y);
-            transform.localScale = new Vector2(-1, 1);
         }
 
         else if (hDirection > 0)
         {
             rb.velocity = new Vector2(5, rb.velocity.y);
-            transform.localScale = new Vector2(1, 1);
         }
 
         else
@@ -76,11 +74,12 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             pd.SendEvent(Hv_final_AudioLib.Event.Stinger);
-            if (other.gameObject.name == "seq1gem")
+            float selectSeq = Random.Range(0, 3);
+            if (selectSeq < 1)
                 pd.SetFloatParameter(Hv_final_AudioLib.Parameter.Selectseq, 1);
-            else if (other.gameObject.name == "seq2gem")
+            else if (selectSeq < 2)
                 pd.SetFloatParameter(Hv_final_AudioLib.Parameter.Selectseq, 2);
-            else if (other.gameObject.name == "seq3gem")
+            else if (selectSeq < 3)
                 pd.SetFloatParameter(Hv_final_AudioLib.Parameter.Selectseq, 3);
         }
         
