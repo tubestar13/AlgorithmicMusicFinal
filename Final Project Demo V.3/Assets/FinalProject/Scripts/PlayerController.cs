@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private Collider2D coll;
     [SerializeField] private LayerMask ground;
 
-    private int count;
+    private int score;
 
     public Text countText;
 
@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour
 
         //start the noise
         pd.SendEvent(Hv_final_AudioLib.Event.Startstop);
+
+        score = 0;
+        SetCountText();
 
     }
 
@@ -74,6 +77,8 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             pd.SendEvent(Hv_final_AudioLib.Event.Stinger);
+            score += 1;
+            SetCountText();
             float selectSeq = Random.Range(0, 3);
             if (selectSeq < 1)
                 pd.SetFloatParameter(Hv_final_AudioLib.Parameter.Selectseq, 1);
@@ -83,6 +88,11 @@ public class PlayerController : MonoBehaviour
                 pd.SetFloatParameter(Hv_final_AudioLib.Parameter.Selectseq, 3);
         }
         
+    }
+
+    void SetCountText()
+    {
+        countText.text = "Score: " + score.ToString();
     }
 
     private void VelocityState()
