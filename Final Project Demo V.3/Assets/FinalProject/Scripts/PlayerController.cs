@@ -13,11 +13,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask ground;
 
     private int score;
+    private float pitch;
 
     public Text countText;
 
+    public GemSpawn gemSpawn;
+
     // Instantiate the heavy plugin library
-    private Hv_final_AudioLib pd;
+    public Hv_final_AudioLib pd;
 
     private void Start()
     {
@@ -27,16 +30,22 @@ public class PlayerController : MonoBehaviour
 
         ground = LayerMask.GetMask("Ground");
 
-        pd = GetComponent<Hv_final_AudioLib>();
-
         //start the noise
         pd.SendEvent(Hv_final_AudioLib.Event.Startstop);
+        pd.SendEvent(Hv_final_AudioLib.Event.Reset); //Put the value in the float block
 
         score = 0;
         SetCountText();
 
+        pd.RegisterSendHook();
+        pd.FloatReceivedCallback += OnFloatMessage;
     }
 
+    void OnFloatMessage(Hv_final_AudioLib.FloatMessage message)
+    {
+        Debug.Log(message.receiverName + ": " + message.value);
+        pitch = message.value;
+    }
 
     private void FixedUpdate()
     {
@@ -67,8 +76,17 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, 10f);
             state = State.jumping;
+            pd.SendEvent(Hv_final_AudioLib.Event.Jump);
         }
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            pd.SendEvent(Hv_final_AudioLib.Event.Land);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -78,7 +96,13 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             pd.SendEvent(Hv_final_AudioLib.Event.Stinger);
             score += 1;
+            gemSpawn.velocity += .03f;
+            pd.SendEvent(Hv_final_AudioLib.Event.Faster);
             SetCountText();
+            if(pitch < 66)
+            {
+                pd.SendEvent(Hv_final_AudioLib.Event.Raisepitch);
+            }
             float selectSeq = Random.Range(0, 3);
             if (selectSeq < 1)
                 pd.SetFloatParameter(Hv_final_AudioLib.Parameter.Selectseq, 1);

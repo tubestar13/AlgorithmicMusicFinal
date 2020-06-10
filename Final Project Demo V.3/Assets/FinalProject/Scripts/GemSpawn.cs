@@ -5,10 +5,12 @@ using UnityEngine;
 public class GemSpawn : MonoBehaviour
 {
     public GameObject gem;
+    public float velocity;
     // Start is called before the first frame update
     void Start()
     {
         InvokeRepeating("SpawnGem", 3f, 3f);
+        velocity = 0.1f;
     }
 
     // Update is called once per frame
