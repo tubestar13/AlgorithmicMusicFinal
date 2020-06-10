@@ -67,6 +67,41 @@ public class Hv_final_Editor : Editor {
     GUI.enabled = isEnabled;
     EditorGUILayout.Space();
 
+    // faster
+    if (GUILayout.Button("faster")) {
+      _dsp.SendEvent(Hv_final_AudioLib.Event.Faster);
+    }
+
+    // jump
+    if (GUILayout.Button("jump")) {
+      _dsp.SendEvent(Hv_final_AudioLib.Event.Jump);
+    }
+
+    // land
+    if (GUILayout.Button("land")) {
+      _dsp.SendEvent(Hv_final_AudioLib.Event.Land);
+    }
+
+    // lowerPitch
+    if (GUILayout.Button("lowerPitch")) {
+      _dsp.SendEvent(Hv_final_AudioLib.Event.Lowerpitch);
+    }
+
+    // miss
+    if (GUILayout.Button("miss")) {
+      _dsp.SendEvent(Hv_final_AudioLib.Event.Miss);
+    }
+
+    // raisePitch
+    if (GUILayout.Button("raisePitch")) {
+      _dsp.SendEvent(Hv_final_AudioLib.Event.Raisepitch);
+    }
+
+    // reset
+    if (GUILayout.Button("reset")) {
+      _dsp.SendEvent(Hv_final_AudioLib.Event.Reset);
+    }
+
     // startstop
     if (GUILayout.Button("startstop")) {
       _dsp.SendEvent(Hv_final_AudioLib.Event.Startstop);
@@ -107,10 +142,17 @@ public class Hv_final_AudioLib : MonoBehaviour {
   /*
     void Start () {
         Hv_final_AudioLib script = GetComponent<Hv_final_AudioLib>();
-        script.SendEvent(Hv_final_AudioLib.Event.Startstop);
+        script.SendEvent(Hv_final_AudioLib.Event.Faster);
     }
   */
   public enum Event : uint {
+    Faster = 0xF17A761A,
+    Jump = 0xE5598BD4,
+    Land = 0xDB47E1AD,
+    Lowerpitch = 0x7FE9AF22,
+    Miss = 0x2E344FC0,
+    Raisepitch = 0xC0029A96,
+    Reset = 0x9D14A612,
     Startstop = 0x7F0A905B,
     Stinger = 0x3968EF08,
   }
@@ -348,7 +390,7 @@ class Hv_final_Context {
 
   private delegate void SendHook(IntPtr context, string sendName, uint sendHash, IntPtr message);
 
-  public Hv_final_Context(double sampleRate, int poolKb=10, int inQueueKb=2, int outQueueKb=2) {
+  public Hv_final_Context(double sampleRate, int poolKb=10, int inQueueKb=3, int outQueueKb=2) {
     gch = GCHandle.Alloc(msgQueue);
     _context = hv_final_new_with_options(sampleRate, poolKb, inQueueKb, outQueueKb);
     hv_setPrintHook(_context, new PrintHook(OnPrint));
